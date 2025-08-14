@@ -4,7 +4,7 @@ import helmet from "helmet"
 import dotenv from "dotenv"
 import authRoutes from "./routes/authRoutes"
 import { authRateLimit } from "./middleware/rateLimiter"
-
+import usersRoutes from "./routes/usersRoute"
 dotenv.config()
 
 const app = express()
@@ -42,6 +42,7 @@ app.disable("x-powered-by")
 
 app.use("/api/auth", authRateLimit)
 app.use("/api/auth", authRoutes)
+app.use("/api/usersAuth", usersRoutes)
 
 app.get("/health", (_req, res) => {
   res.json({
