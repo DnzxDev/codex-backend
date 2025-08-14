@@ -1,20 +1,22 @@
 import express from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { AuthorizedUsersController } from '@/controllers/usersController';
 const router = express.Router();
 const authorizedUsersController = new AuthorizedUsersController();
 
 
-const validateDiscordId: express.RequestHandler = (req, res, next) => {
+const validateDiscordId: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const discordId = req.params.discordId || req.body.discordId;
-  
+
   if (discordId && !/^\d{17,19}$/.test(discordId)) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       error: 'Discord ID deve conter apenas números e ter entre 17-19 dígitos',
     });
+    return; 
   }
-  
-  next();
+
+  next(); 
 };
 
 router.get('/check/:discordId', validateDiscordId, authorizedUsersController.checkUserAuthorization);
@@ -26,4 +28,3 @@ router.get('/discord/:discordId', validateDiscordId, authorizedUsersController.g
 router.get('/profile/:discordId', validateDiscordId, authorizedUsersController.getUserProfile);
 
 export default router;
-
